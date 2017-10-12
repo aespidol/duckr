@@ -1,0 +1,11 @@
+.color {
+    color: blue;
+}
+
+.container {
+    width: 100%;
+}
+.innerContainer {
+    max-width: 900px;
+    margin: 0 auto;
+}

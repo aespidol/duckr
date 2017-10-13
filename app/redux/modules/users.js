@@ -10,153 +10,148 @@ const FETCHING_USER_SUCCESS = 'FETCHING_USER_SUCCESS'
 const REMOVE_FETCHING_USER = 'REMOVE_FETCHING_USER'
 
 // Users Actions
-export function authUser(uid){
-    return {
-        type: AUTH_USER,
-        uid,
-    }
-
+export function authUser (uid) {
+  return {
+    type: AUTH_USER,
+    uid
+  }
 }
-function unauthUser(){
-    return {
-        type: UNAUTH_USER,
-    }
-
+function unauthUser () {
+  return {
+    type: UNAUTH_USER
+  }
 }
-function fetchingUser(){
-    return {
-        type: FETCHING_USER,
-    }
+function fetchingUser () {
+  return {
+    type: FETCHING_USER
+  }
 }
 
-function fetchUserFailure(){
-    return {
-        type: FETCHING_USER_FAILURE,
-        error: 'Error fetching user'
-    }
-
+function fetchUserFailure () {
+  return {
+    type: FETCHING_USER_FAILURE,
+    error: 'Error fetching user'
+  }
 }
 
-export function fetchUserSuccess(uid, user, timestamp){
-    return {
-        type: FETCHING_USER_SUCCESS,
-        uid,
-        user,
-        timestamp
-    }
+export function fetchUserSuccess (uid, user, timestamp) {
+  return {
+    type: FETCHING_USER_SUCCESS,
+    uid,
+    user,
+    timestamp
+  }
 }
-
 
 // Users
 const initialUserState = {
-    lastUpdated: 0,
-    info: {
-        name: '',
-        uid: '',
-        avatar: '',
-    },
+  lastUpdated: 0,
+  info: {
+    name: '',
+    uid: '',
+    avatar: ''
+  }
 }
 
-function user(state = initialUserState, action) {
-    switch (action.type) {
-        case FETCHING_USER_SUCCESS:
-            return {
-                ...state,
-                info: action.user,
-                lastUpdated: action.timestamp,
-            }
-        default:
-            return state
-    }
+function user (state = initialUserState, action) {
+  switch (action.type) {
+    case FETCHING_USER_SUCCESS:
+      return {
+        ...state,
+        info: action.user,
+        lastUpdated: action.timestamp
+      }
+    default:
+      return state
+  }
 }
 
 // Users Reducers
 // Inital State
 const initialState = {
-    isFetching: true,
-    error: '',
-    isAuthed: false,
-    authedId: '',
+  isFetching: true,
+  error: '',
+  isAuthed: false,
+  authedId: ''
 }
 // Thunks
-export function fetchAndHandleAuthUser(){
-    return function(dispatch){
-        dispatch(fetchingUser())
-        return auth().then(({user, credential}) => {
-            const { displayName, photoURL, uid} = user.providerData[0]
-            const userInfo = formatUserInfo(displayName, photoURL, uid)
-            return dispatch(fetchUserSuccess(user.uid, userInfo, Date.now()))
-        })
-        .then(({user}) => {
-            return saveUser(user)
-        })
-        .then((user) => dispatch(authUser(user.uid)))
-        .catch((e)=>{
-            console.log(e)
-            return dispatch(fetchUserFailure(e))
-        })
-    }
+export function fetchAndHandleAuthUser () {
+  return function (dispatch) {
+    dispatch(fetchingUser())
+    return auth().then(({user, credential}) => {
+      const { displayName, photoURL, uid} = user.providerData[0]
+      const userInfo = formatUserInfo(displayName, photoURL, uid)
+      return dispatch(fetchUserSuccess(user.uid, userInfo, Date.now()))
+    })
+      .then(({user}) => {
+        return saveUser(user)
+      })
+      .then((user) => dispatch(authUser(user.uid)))
+      .catch((e) => {
+        console.log(e)
+        return dispatch(fetchUserFailure(e))
+      })
+  }
 }
 
-export function removeFetchingUser(){
-    return {
-        type: REMOVE_FETCHING_USER,
-    }
+export function removeFetchingUser () {
+  return {
+    type: REMOVE_FETCHING_USER
+  }
 }
 
-export function logoutAndUnauth(){
-    return function(dispatch){
-        logout()
-        dispatch(unauthUser())
-    }
+export function logoutAndUnauth () {
+  return function (dispatch) {
+    logout()
+    dispatch(unauthUser())
+  }
 }
 
-export default function users(state = initialState, action) {
-    switch (action.type) {
-        case AUTH_USER:
-            return {
-                ...state,
-                isAuthed: true,
-                authedId: action.uid,
-            }
-        case UNAUTH_USER:
-            return {
-                ...state,
-                isAuthed: false,
-                authedId: '',
-            }
-        case FETCHING_USER:
-            return {
-                ...state,
-                isFetching: true,
-            }
-        case FETCHING_USER_FAILURE:
-            return {
-                ...state,
-                isFetching: false,
-                error: action.error,
-            }
-        case FETCHING_USER_SUCCESS:
-            console.log(action)
-            return action.user === null ?
-                {
-                    ...state,
-                    isFetching: false,
-                    error: '',
-                } :
-                {
-                    ...state,
-                    isFetching: false,
-                    error: '',
-                    [action.uid]: user(state[action.uid], action),
-                }
-        case REMOVE_FETCHING_USER:
-            return {
-                ...state,
-                isFetching: false,
-            }
-        default:
-            return state
-    }
+export default function users (state = initialState, action) {
+  switch (action.type) {
+    case AUTH_USER:
+      return {
+        ...state,
+        isAuthed: true,
+        authedId: action.uid
+      }
+    case UNAUTH_USER:
+      return {
+        ...state,
+        isAuthed: false,
+        authedId: ''
+      }
+    case FETCHING_USER:
+      return {
+        ...state,
+        isFetching: true
+      }
+    case FETCHING_USER_FAILURE:
+      return {
+        ...state,
+        isFetching: false,
+        error: action.error
+      }
+    case FETCHING_USER_SUCCESS:
+      console.log(action)
+      return action.user === null
+        ? {
+          ...state,
+          isFetching: false,
+          error: ''
+        }
+        : {
+          ...state,
+          isFetching: false,
+          error: '',
+          [action.uid]: user(state[action.uid], action)
+        }
+    case REMOVE_FETCHING_USER:
+      return {
+        ...state,
+        isFetching: false
+      }
+    default:
+      return state
+  }
 }
-

@@ -8,13 +8,13 @@ import thunk from 'redux-thunk'
 import { checkIfAuthed } from 'helpers/auth'
 
 const store = createStore(combineReducers(reducers), compose(
-  applyMiddleware(thunk), 
-  window.devToolsExtension ? window.devToolsExtension(): (f) => f )
+  applyMiddleware(thunk),
+  window.devToolsExtension ? window.devToolsExtension() : (f) => f)
 )
 
-function checkAuth(){
-  if(store.getState().users.isFetching === true){
-    return 
+function checkAuth () {
+  if (store.getState().users.isFetching === true) {
+    return
   }
   const isAuthed = checkIfAuthed(store)
   console.log(store.getState())

@@ -13,37 +13,37 @@ class MainContainer extends React.Component {
     isAuthed: PropTypes.bool.isRequired,
     authUser: PropTypes.func.isRequired,
     fetchUserSuccess: PropTypes.func.isRequired,
-    removeFetchingUser: PropTypes.func.isRequired,
+    removeFetchingUser: PropTypes.func.isRequired
   }
   static contextTypes = {
-    router: PropTypes.object.isRequired,
+    router: PropTypes.object.isRequired
   }
-  componentDidMount() {
-    firebaseAuth().onAuthStateChanged((user)=>{
-      if(user){
+  componentDidMount () {
+    firebaseAuth().onAuthStateChanged((user) => {
+      if (user) {
         const {displayName, photoURL, uid} = user.providerData[0]
         const userInfo = formatUserInfo(displayName, photoURL, uid)
         this.props.authUser(user.uid)
         this.props.fetchUserSuccess(user.uid, userInfo, Date.now())
-        if(this.props.location.pathname === '/'){
-          this.context.router.history.push("/feed")
+        if (this.props.location.pathname === '/') {
+          this.context.router.history.push('/feed')
         }
       } else {
         this.props.removeFetchingUser()
       }
     })
   }
-  
+
   render () {
     const { isAuthed } = this.props
     return this.props.isFetching === true
-      ? null 
+      ? null
       : <div className={container}>
-          <Navigation isAuthed={this.props.isAuthed}/>
-          <div className={innerContainer}>
-            {this.props.children}
-          </div>
+        <Navigation isAuthed={this.props.isAuthed}/>
+        <div className={innerContainer}>
+          {this.props.children}
         </div>
+      </div>
   }
 }
 
@@ -52,6 +52,6 @@ export default connect(({users}) => {
     isAuthed: users.isAuthed,
     isFetching: users.isFetching
   }
-},(dispatch)=>{
+}, (dispatch) => {
   return bindActionCreators(userActionCreators, dispatch)
 })(MainContainer)

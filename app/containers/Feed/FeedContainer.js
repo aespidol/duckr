@@ -6,11 +6,11 @@ class FeedContainer extends Component {
     static propTypes = {
 
     }
-    render() {
-        return (
-            <Feed />
-        )
+    render () {
+      return (
+        <Feed />
+      )
     }
 }
 
-export default FeedContainer;
+export default FeedContainer

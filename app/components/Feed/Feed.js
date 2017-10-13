@@ -1,16 +1,16 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 
 const Feed = props => {
-    return (
-        <div>
+  return (
+    <div>
             Feed
-        </div>
-    );
-};
+    </div>
+  )
+}
 
 Feed.propTypes = {
-    
-};
+
+}
 
 export default Feed

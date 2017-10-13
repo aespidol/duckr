@@ -47,10 +47,10 @@ class MainContainer extends React.Component {
   }
 }
 
-export default connect((state) => {
+export default connect(({users}) => {
   return {
-    isAuthed: state.isAuthed,
-    isFetching: state.isFetching
+    isAuthed: users.isAuthed,
+    isFetching: users.isFetching
   }
 },(dispatch)=>{
   return bindActionCreators(userActionCreators, dispatch)

@@ -3,3 +3,5 @@
 /.vscode
 actions.js
 reducers.js
+redux-schema.js
+firebase-schema.js

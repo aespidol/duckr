@@ -1,6 +1,6 @@
 import React from 'react'
 import { Authenticate } from 'components'
-import auth from 'helpers/auth'
+import { auth } from 'helpers/auth'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'

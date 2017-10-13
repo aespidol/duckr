@@ -1,5 +1,4 @@
-import auth from 'helpers/auth'
-import {logout, saveUser} from 'helpers/auth'
+import {logout, saveUser, auth} from 'helpers/auth'
 import {formatUserInfo} from 'helpers/utils'
 
 const AUTH_USER = 'AUTH_USER'

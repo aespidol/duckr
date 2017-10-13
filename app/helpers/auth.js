@@ -1,6 +1,6 @@
 import { ref, firebaseAuth } from 'config/constants'
 
-export default function auth () {
+export function auth () {
   return firebaseAuth().signInWithPopup(new firebaseAuth.FacebookAuthProvider())
 }
 

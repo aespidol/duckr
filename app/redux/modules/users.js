@@ -1,14 +1,16 @@
 import auth from 'helpers/auth'
-import logout from 'helpers/auth'
+import {logout, saveUser} from 'helpers/auth'
+import {formatUserInfo} from 'helpers/utils'
 
 const AUTH_USER = 'AUTH_USER'
 const UNAUTH_USER = 'UNAUTH_USER'
 const FETCHING_USER = 'FETCHING_USER'
 const FETCHING_USER_FAILURE = 'FETCHING_USER_FAILURE'
 const FETCHING_USER_SUCCESS = 'FETCHING_USER_SUCCESS'
+const REMOVE_FETCHING_USER = 'REMOVE_FETCHING_USER'
 
 // Users Actions
-function authUser(uid){
+export function authUser(uid){
     return {
         type: AUTH_USER,
         uid,
@@ -35,7 +37,7 @@ function fetchUserFailure(){
 
 }
 
-function fetchUserSuccess(uid, user, timestamp){
+export function fetchUserSuccess(uid, user, timestamp){
     return {
         type: FETCHING_USER_SUCCESS,
         uid,
@@ -71,7 +73,7 @@ function user(state = initialUserState, action) {
 // Users Reducers
 // Inital State
 const initialState = {
-    isFetching: false,
+    isFetching: true,
     error: '',
     isAuthed: false,
     authedId: '',
@@ -80,13 +82,25 @@ const initialState = {
 export function fetchAndHandleAuthUser(){
     return function(dispatch){
         dispatch(fetchingUser())
-        return auth().then((user) => {
-           dispatch(fetchUserSuccess(user.uid, user, Date.now()))
-            dispatch(authUser(user.uid))
-        }).catch((e)=>{
+        return auth().then(({user, credential}) => {
+            const { displayName, photoURL, uid} = user.providerData[0]
+            const userInfo = formatUserInfo(displayName, photoURL, uid)
+            return dispatch(fetchUserSuccess(user.uid, userInfo, Date.now()))
+        })
+        .then(({user}) => {
+            return saveUser(user)
+        })
+        .then((user) => dispatch(authUser(user.uid)))
+        .catch((e)=>{
             console.log(e)
             return dispatch(fetchUserFailure(e))
         })
+    }
+}
+
+export function removeFetchingUser(){
+    return {
+        type: REMOVE_FETCHING_USER,
     }
 }
 
@@ -136,6 +150,11 @@ export default function users(state = initialState, action) {
                     error: '',
                     [action.uid]: user(state[action.uid], action),
                 }
+        case REMOVE_FETCHING_USER:
+            return {
+                ...state,
+                isFetching: false,
+            }
         default:
             return state
     }

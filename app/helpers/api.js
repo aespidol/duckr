@@ -29,3 +29,37 @@ export function saveDuck(duck) {
         saveLikeCount(duckId),
     ]).then(()=>({...duck, duckId}))
 }
+
+export function listenToFeed (cb, errorCB){
+    ref.child('ducks').on('value', (snapshot) => {
+        const feed = snapshot.val() || {}
+        const sortedIds = Object.keys(feed).sort((a,b)=>{
+            return feed[a].timestamp - feed[b].timestamp
+        })
+        cb({feed, sortedIds})
+    }, errorCB)
+}
+
+export function fetchUsersLikes(uid){
+    return ref.child(`usersLikes/${uid}`).once()
+        .then((snapshot) => snapshot.val() || {})
+}
+
+export function saveToUsersLikes(uid, duckId){
+    return ref.child(`usersLikes/${uid}/${duckId}`).set(true)
+}
+
+export function deleteFromUsersLikes(uid, duckId){
+    return ref.child(`usersLikes/${uid}/${duckId}`).set(null)
+    
+}
+
+export function incrementNumberOfLikes(duckId){
+    return ref.child(`likeCount/${duckId}`)
+        .transaction((curr = 0) => curr + 1)
+}
+
+export function decrementNumberOfLikes(duckId) {
+    return ref.child(`likeCount/${duckId}`)
+    .transaction((curr = 0) => curr - 1)
+}

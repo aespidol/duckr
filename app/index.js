@@ -17,7 +17,6 @@ function checkAuth () {
     return
   }
   const isAuthed = checkIfAuthed(store)
-  console.log(store.getState())
   return isAuthed
 }
 

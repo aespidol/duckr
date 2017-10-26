@@ -132,7 +132,6 @@ export default function users (state = initialState, action) {
         error: action.error
       }
     case FETCHING_USER_SUCCESS:
-      console.log(action)
       return action.user === null
         ? {
           ...state,

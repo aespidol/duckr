@@ -33,7 +33,7 @@ function fetchingLikesSuccess(likes){
 
 
 export function addAndHandleLike(duckId, e){
-    e.stopPropogation()
+    e.preventDefault()
     return function (dispatch, getState){
         dispatch(addLike(duckId))
 
@@ -50,7 +50,7 @@ export function addAndHandleLike(duckId, e){
 }
 
 export function handleDeleteLike(duckId, e){
-    e.stopPropogation()
+    e.stopPropagation()    
     return function (dispatch, getState){
         dispatch(removeLike(duckId))
 

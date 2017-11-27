@@ -12,18 +12,18 @@ class DuckContainer extends Component {
         router: object.isRequired
     }
     goToProfile(e){
-        e.stopPropogation()
+        e.stopPropagation()
         this.context.router.history.push(`/${this.props.duck.uid}`)
     }
     handleClick(e){
-        e.stopPropogation()
+        e.stopPropagation()
         this.context.router.history.push(`/duckDetail/${this.props.duck.duckId}`)        
     }
     render() {
-        console.log("hey",this.props)
+        console.log(this.props)
         return (
             <div>
-                <Duck goToProfile={this.goToProfile} onClick={this.props.hideReplyBtn === true ? null : this.handleClick} {...this.props}/>    
+                <Duck goToProfile={this.goToProfile.bind(this)} replyClicked={this.props.hideReplyBtn === true ? null : this.handleClick.bind(this)} {...this.props}/>    
             </div>
         );
     }

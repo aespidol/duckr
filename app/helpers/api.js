@@ -41,7 +41,8 @@ export function listenToFeed (cb, errorCB){
 }
 
 export function fetchUsersLikes(uid){
-    return ref.child(`usersLikes/${uid}`).once()
+    console.log("thunk", uid)
+    return ref.child(`usersLikes/${uid}`).once('value')
         .then((snapshot) => snapshot.val() || {})
 }
 

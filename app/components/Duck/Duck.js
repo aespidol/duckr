@@ -28,7 +28,7 @@ const Duck = props => {
                 <div className={likeReplyContainer}>
                     {props.hideReplyBtn === true
                         ? null
-                        : <Reply className={icon} />}
+                        : <Reply className={icon} onClick={props.replyClicked}/>}
                     <div className={actionContainer}>
                         <Star className={starIcon} onClick={(e) => starFn(props.duck.duckId, e)} />
                         {props.hideLikeCount === true ? null : <div>{props.numberOfLikes}</div>}
@@ -48,7 +48,7 @@ Duck.propTypes = {
         timestamp: number.isRequired,
         uid: string.isRequired
     }),
-    onClick: func,
+    replyClicked: func,
     isLiked: bool.isRequired,
     addAndHandleLike: func.isRequired,
     handleDeleteLike: func.isRequired,
